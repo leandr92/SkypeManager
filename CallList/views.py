@@ -134,7 +134,6 @@ def contacts_view(request):
         login = request.POST['login']
         password = request.POST['pass']
 
-    # sk = Skype("mingaliev.e", "123jkpvdvxh123")
     sk = Skype(connect=False)
 
     sk.conn.setTokenFile(user.email + ".tokens-app")
