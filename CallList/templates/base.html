@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru-Ru">
+<head>
+    <title>{% block title %}Skype. Менеджер звонков{% endblock %}</title>
+    {% include 'snippets/header.html' %}
+</head>
+
+<body>
+
+    <!-- Body -->
+    <style type="text/css">
+
+        .main{
+            min-height: 100vh;
+            height: 100%;
+        }
+
+    </style>
+
+    <div id="content" class="main">
+        {% block content %}{% endblock %}
+    </div>
+    <!-- End Body -->
+ 
+    {% include 'snippets/footer.html' %}
+    <div id="page-preloader" class="hidden"><span class="spinner"></span></div>
+
+<script>
+
+    function clickLoad(){
+        var $preloader = $('#page-preloader');
+        $preloader.removeClass("hidden");
+
+        var $spinner = $preloader.find('.spinner');
+        $spinner.fadeOut();
+
+        $preloader.delay(350).fadeOut('slow');
+    }
+
+</script>
+
+</body>
+
+</html>

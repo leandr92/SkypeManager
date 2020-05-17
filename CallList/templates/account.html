@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+  
+
+  <div class="row">
+    
+    <div class="col-md-8 order-md-1">
+      <h4 class="mb-3"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Данные пользователя</font></font></h4>
+      
+      <form method="post">{% csrf_token %}
+        <div class="mb-3">
+          <label for="username"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Имя пользователя</font></font></label>
+          <div class="input-group">
+            <input type="text" class="form-control" name ="username" id="username" placeholder="имя пользователя" required="" value={{account_form.initial.username}}>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="email"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Email</font></font><span class="text-muted"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"></font></font></span></label>
+          <input type="email" class="form-control" name ="email" id="email" placeholder="you@gmail.com" value={{account_form.initial.email}}>
+        </div>
+
+        <div class="mb-3">
+          <label for="skype_login"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Логин скайпа</font></font><span class="text-muted"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">(необязательно)</font></font></span></label>
+          <input type="text" class="form-control" name="skype_login" id="skype_login" value={{account_form.initial.skype_login}}>
+        </div>
+
+         <div class="mb-3">
+          <label for="skype_password"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Пароль скайпа</font></font><span class="text-muted"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">(необязательно)</font></font></span></label>
+          <input type="password" class="form-control" name="skype_password" placeholder="Пароль не отображается на форме" id="skype_password">
+        </div>
+
+        <hr class="mb-4">
+  
+        {% for field in account_form %}
+            {% for error in field.errors %}
+                <p style="color: red;">{{error}}</p>
+            {% endfor %}
+        {% endfor %}
+
+        {% if account_form.non_field_errors %}
+            <div style="color: red;">
+                <p>
+                    {{account_form.non_field_errors}}
+                </p>
+            </div>
+        {% endif %}
+
+        {% if success_message %}
+
+          <p style = "color: green; text-align: center;">{{success_message}}</p>
+
+        {% endif %}
+        <button class="btn btn-primary btn-lg btn-block" type="submit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Сохранить</font></font></button>
+      </form>
+      <div class="d-flex flex-column">
+          <a class="m-auto" href="{% url 'password_change' %}">Сменить пароль</a>
+      </div>
+    </div>
+  </div>
+
+  
+</div>
+
+{% endblock content %}

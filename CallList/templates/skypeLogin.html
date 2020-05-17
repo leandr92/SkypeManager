@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% if request.user.is_authenticated %}
+            
+            <div class="col-md-8 order-md-1">
+                <h4 class="mb-3"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Введите данные авторизации скайпа</font></font></h4>
+                
+                <form method="post" action="{% url 'contacts'%}">{% csrf_token %}
+                    <div class="mb-3">
+                        
+                        <label for="login"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Имя пользователя</font></font></label>
+                        
+                        <div class="input-group">
+                            <input type="text" class="form-control" name ="login" id="login" placeholder="имя пользователя" required="">
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="pass"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Пароль</font></font><span class="text-muted"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"></font></font></span></label>
+                        <input type="password" class="form-control" name ="pass" id="pass">
+                    </div>
+                    {% if error_message %}
+                        <p style="color: red;">{{ error_message }}</p>
+                    {% endif %}
+                    <button class="btn btn-primary btn-lg btn-block" type="submit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Подключиться</font></font></button>
+                </form>
+            </div>
+        {% else %}    
+            <p> Необходимо войти в систему</p>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock content %}

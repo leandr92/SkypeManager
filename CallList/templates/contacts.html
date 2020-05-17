@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h3>Список контактов</h3>
+    <p>Выберите контакты из списка и нажмите "Сохранить", чтобы добавить изменить список контактов для сбора данных</p>
+    {% if contact_list %}
+        <button onclick="saveContacts()" class="btn btn-primary float-right">Сохранить</button>
+        <table id ="contacts" class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Логин</th><th >Имя</th><th>Используется</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for contact in contact_list %}
+                <tr class="contact">
+                    <td>{{contact.id}}</td> <td>{{contact.name}}</td> <td>{{contact.used}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <button onclick="saveContacts()" class="btn btn-primary float-right">Сохранить</button>
+    {% else %}
+        <p>Контакты не обнаружены</p>
+    {% endif %}
+
+</div>
+
+    <script>
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $(document).ready(function() {
+            $("#contacts").DataTable({
+                "paging": false,
+                "scrollY": 400,
+                "info": false,
+                "columns": [
+                { "data": "id" },
+                { "data": "name" },
+                { "data": "used", "type": "checkbox", 'render': function (data, type, full, meta){
+                    
+                    var checked = "";
+
+                    if (data == "True"){
+                        checked = "checked";
+                    }
+                    return '<input type="checkbox" name="used"' + checked +">";
+                }
+                }
+            ]
+            });
+
+            var csrftoken = getCookie('csrftoken');
+
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+        })
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function saveContacts(){
+            
+            var table=$('#contacts').DataTable();
+            var contact_list= [];
+            var checkedvalues = table.$('input:checked').each(function () {
+                var $row = $(this).closest('tr');
+
+                // Get row data
+                var data = table.row($row).data();
+
+                // Get row ID
+                var rowId = data.id;
+                contact_list.push(rowId)
+            });
+            var serializedContactList = JSON.stringify(contact_list);
+
+            $.post({% url 'contacts_update' %}, {contacts:serializedContactList},
+                function(data) {
+
+                }
+            );
+        }
+
+    </script>
+{% endblock %}

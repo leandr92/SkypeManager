@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+    <h3>Список звонков</h3>
+    <p> Чтение истории возможно лишь на глубину не более 30 дней </p>
+    {% if calls %}
+        <table id ="calls" class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Логин</th><th >Имя</th><th>Последний звонок</th><th class = "d-none">Дней с последнего звонка</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for call in calls %}
+                <tr class="call">
+                    <td>{{call.id}}</td> <td>{{call.name}}</td> <td>{{call.duration_view}}</td><td class="d-none">{{call.duration}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Звонки не обнаружены</p>
+    {% endif %}
+
+</div>
+<script>
+    $(document).ready(function() {
+            $("#calls").DataTable({
+                "paging": false,
+                "scrollY": 400,
+                "info": false,
+                "columns": [
+                    { "data": "id" },
+                    { "data": "name" },
+                    { "data": "duration_view"},
+                    { "data": "duration" }
+                ],
+                "createdRow": function( row, data, dataIndex ) {
+                if ( data["duration"] >= 15 ) {
+                    $(row).addClass( 'bg-warning' );
+                }
+                else if( data["duration"] >= 30 || data["duration"] == "" ){
+                    $(row).addClass( 'bg-danger' ); 
+                }
+            }
+            });
+    });
+</script>
+{% endblock %}
